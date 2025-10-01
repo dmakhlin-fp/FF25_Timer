@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Keynote Timer</title>
+
+  <!-- Antenna font preload -->
+  <link rel="preload" href="Fonts/Antenna-BlackItalic.woff2" as="font" type="font/woff2" crossorigin>
+  <style>
+    @font-face {
+      font-family: 'Antenna';
+      src: url('Fonts/Antenna-BlackItalic.woff2') format('woff2'),
+           url('Fonts/Antenna-BlackItalic.woff') format('woff');
+      font-weight: 900;
+      font-style: italic;
+      font-display: swap;
+    }
+
+    body {
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(-45deg, #FAD9A6, #51C2B9, #FAD9A6, #51C2B9);
+      background-size: 400% 400%;
+      animation: gradientShift 12s ease infinite;
+      overflow: hidden;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Container centered within 3520×1056 */
+    .timer-container {
+      width: 3520px;
+      height: 1056px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: 'Antenna', sans-serif;
+      font-size: 120px; /* smaller */
+      text-transform: uppercase;
+      margin: 0 0 40px;
+      color: #000;
+    }
+
+    #timer {
+      font-family: 'Antenna', sans-serif;
+      font-size: 200px; /* smaller */
+      letter-spacing: 8px;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="timer-container">
+    <h1>KEYNOTE BEGINS IN</h1>
+    <div id="timer">00:10:00</div>
+  </div>
+
+  <script>
+    let params = new URLSearchParams(window.location.search);
+
+    // Default 10 minutes
+    let durationMinutes = parseInt(params.get("minutes")) || 10;
+    let autoStart = params.get("autostart") === "true";
+
+    let duration = durationMinutes * 60; 
+    let timeRemaining = duration;
+    let timerInterval = null;
+    const timerDisplay = document.getElementById('timer');
+
+    function updateDisplay() {
+      let minutes = Math.floor(timeRemaining / 60);
+      let seconds = timeRemaining % 60;
+      let hours = Math.floor(minutes / 60);
+      minutes = minutes % 60;
+      timerDisplay.textContent =
+        String(hours).padStart(2, '0') + ":" +
+        String(minutes).padStart(2, '0') + ":" +
+        String(seconds).padStart(2, '0');
+    }
+
+    function startTimer() {
+      if (timerInterval) return;
+      timerInterval = setInterval(() => {
+        if (timeRemaining > 0) {
+          timeRemaining--;
+          updateDisplay();
+        } else {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      timeRemaining = duration;
+      updateDisplay();
+    }
+
+    // Keyboard shortcuts (still available for you as secret controls)
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "s" || e.key === "S") startTimer();
+      if (e.key === "p" || e.key === "P") pauseTimer();
+      if (e.key === "r" || e.key === "R") resetTimer();
+    });
+
+    updateDisplay();
+    if (autoStart) startTimer();
+  </script>
+</body>
+</html>
