@@ -42,7 +42,7 @@
     /* Logo same width as timer */
     #logo {
       width: 100%;     
-      max-width: 1200px;  /* controls large size; matches timer visually */
+      max-width: 1200px; /* controls large size */
       height: auto;
       margin-bottom: 40px;
     }
@@ -53,7 +53,7 @@
       font-size: 200px;
       letter-spacing: 8px;
       color: #fff;
-      max-width: 1200px; /* aligns visually w/ logo */
+      max-width: 1200px;
     }
 
     /* Big countdown overlay */
@@ -66,7 +66,7 @@
       align-items: center;
       background: #000;
       font-family: 'AntennaMedium', sans-serif;
-      font-size: 800px;
+      font-size: 600px; /* Smaller now */
       color: transparent;
       background: linear-gradient(180deg, #028DAC 44%, #FFFFFF 100%);
       -webkit-background-clip: text;
@@ -80,8 +80,8 @@
     @keyframes numberPulse {
       0%   { transform: scale(0.8); opacity: 0; }
       20%  { transform: scale(1);   opacity: 1; }
-      80%  { transform: scale(1.2); opacity: 0; }
-      100% { transform: scale(1.2); opacity: 0; }
+      80%  { transform: scale(1.1); opacity: 0; }
+      100% { transform: scale(1.1); opacity: 0; }
     }
 
     @keyframes fadeToBlack {
@@ -101,11 +101,15 @@
   <div id="finalCountdown"></div>
 
   <script>
+    // Read query parameters
     let params = new URLSearchParams(window.location.search);
-    let durationMinutes = parseInt(params.get("minutes")) || 10;
+
+    let hours = parseInt(params.get("hours")) || 0;
+    let minutes = parseInt(params.get("minutes")) || 10; // default 10 minutes
+    let seconds = parseInt(params.get("seconds")) || 0;
     let autoStart = params.get("autostart") === "true";
 
-    let duration = durationMinutes * 60;
+    let duration = hours * 3600 + minutes * 60 + seconds;
     let timeRemaining = duration;
     let timerInterval = null;
 
@@ -114,15 +118,15 @@
     const finalCountdown = document.getElementById('finalCountdown');
 
     function updateDisplay() {
-      let minutes = Math.floor(timeRemaining / 60);
-      let seconds = timeRemaining % 60;
-      let hours = Math.floor(minutes / 60);
-      minutes = minutes % 60;
+      let mins = Math.floor(timeRemaining / 60);
+      let secs = timeRemaining % 60;
+      let hrs = Math.floor(mins / 60);
+      mins = mins % 60;
 
       timerDisplay.textContent =
-        String(hours).padStart(2, '0') + ":" +
-        String(minutes).padStart(2, '0') + ":" +
-        String(seconds).padStart(2, '0');
+        String(hrs).padStart(2, '0') + ":" +
+        String(mins).padStart(2, '0') + ":" +
+        String(secs).padStart(2, '0');
     }
 
     function startTimer() {
@@ -132,7 +136,7 @@
           timeRemaining--;
           updateDisplay();
 
-          // Start large number countdown sequence at 10s
+          // Trigger final countdown IMMEDIATELY when equal to 10
           if (timeRemaining === 10) {
             clearInterval(timerInterval);
             timerInterval = null;
@@ -155,8 +159,7 @@
 
     // Final "10..1" countdown animation
     function startFinalCountdown() {
-      // Hide main logo/timer
-      mainContent.style.display = "none";
+      mainContent.style.display = "none"; // Hide logo/timer
 
       let count = 10;
       let countdownInterval = setInterval(() => {
@@ -164,7 +167,7 @@
           finalCountdown.textContent = count;
           finalCountdown.style.opacity = "1";
           finalCountdown.style.animation = "none"; // reset animation
-          void finalCountdown.offsetWidth; // trigger reflow
+          void finalCountdown.offsetWidth; // reflow
           finalCountdown.style.animation = "numberPulse 1s forwards";
           count--;
         } else {
