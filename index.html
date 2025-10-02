@@ -75,28 +75,26 @@
       z-index: 5;
     }
 
-    /* Number pulse (per second) */
+    /* --- Synced pulse animations --- */
     @keyframes numberPulse {
       0%   { transform: scale(0.8); opacity: 0; }
       20%  { transform: scale(1);   opacity: 1; }
-      80%  { transform: scale(1.05); opacity: 0; }
+      50%  { transform: scale(1.05); opacity: 1; }
       100% { transform: scale(1.05); opacity: 0; }
     }
 
-    /* Glow pulse (in sync with number) */
     @keyframes glowPulse {
       0%   { box-shadow: inset 0 0 0px 0px rgba(2,141,172,0); }
-      20%  { box-shadow: inset 0 0 80px 5px rgba(2,141,172,0.8); }
+      20%  { box-shadow: inset 0 0 80px 5px rgba(2,141,172,0.9); }
       50%  { box-shadow: inset 0 0 100px 5px rgba(2,141,172,1); }
-      80%  { box-shadow: inset 0 0 60px 3px rgba(2,141,172,0.6); }
       100% { box-shadow: inset 0 0 0px 0px rgba(2,141,172,0); }
     }
 
     .animate-number {
-      animation: numberPulse 1s forwards;
+      animation: numberPulse 1s linear forwards;
     }
     .animate-glow {
-      animation: glowPulse 1s forwards;
+      animation: glowPulse 1s linear forwards;
     }
 
     @keyframes fadeToBlack {
@@ -174,12 +172,11 @@
         finalCountdown.textContent = n;
         finalCountdown.style.opacity = "1";
 
-        // Restart both animations in sync
+        // Restart both animations in sync every tick
         finalCountdown.classList.remove("animate-number");
         bodyEl.classList.remove("animate-glow");
-        void finalCountdown.offsetWidth; // reflow to reset
+        void finalCountdown.offsetWidth; 
         void bodyEl.offsetWidth;
-
         finalCountdown.classList.add("animate-number");
         bodyEl.classList.add("animate-glow");
       }
@@ -206,7 +203,6 @@
       bodyEl.classList.remove("animate-glow");
     }
 
-    // Keyboard controls
     document.addEventListener("keydown", (e) => {
       if (e.key === "s" || e.key === "S") startTimer();
       if (e.key === "p" || e.key === "P") pauseTimer();
