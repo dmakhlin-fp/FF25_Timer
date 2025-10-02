@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Flexport Fall Release 25 Timer</title>
 
+  <!-- Preload Font -->
   <link rel="preload" href="Fonts/Antenna-Medium.woff2" as="font" type="font/woff2" crossorigin>
 
   <style>
@@ -75,7 +76,7 @@
       z-index: 5;
     }
 
-    /* --- Synced pulse animations --- */
+    /* Number pulse (per second) */
     @keyframes numberPulse {
       0%   { transform: scale(0.8); opacity: 0; }
       20%  { transform: scale(1);   opacity: 1; }
@@ -83,6 +84,7 @@
       100% { transform: scale(1.05); opacity: 0; }
     }
 
+    /* Glow pulse (in sync with numbers) */
     @keyframes glowPulse {
       0%   { box-shadow: inset 0 0 0px 0px rgba(2,141,172,0); }
       20%  { box-shadow: inset 0 0 80px 5px rgba(2,141,172,0.9); }
@@ -114,12 +116,14 @@
   <script>
     let params = new URLSearchParams(window.location.search);
 
+    // Parse query string (supports ?hours=, ?minutes=, ?seconds=)
     let hours   = params.has("hours")   ? parseInt(params.get("hours"))   || 0 : 0;
     let minutes = params.has("minutes") ? parseInt(params.get("minutes")) || 0 : 0;
     let seconds = params.has("seconds") ? parseInt(params.get("seconds")) || 0 : 0;
 
+    // Default to 10 minutes if nothing specified
     if (!params.has("hours") && !params.has("minutes") && !params.has("seconds")) {
-      minutes = 10; // default
+      minutes = 10;
     }
 
     let autoStart = params.get("autostart") === "true";
@@ -172,11 +176,12 @@
         finalCountdown.textContent = n;
         finalCountdown.style.opacity = "1";
 
-        // Restart both animations in sync every tick
+        // Sync both animations per tick
         finalCountdown.classList.remove("animate-number");
         bodyEl.classList.remove("animate-glow");
-        void finalCountdown.offsetWidth; 
+        void finalCountdown.offsetWidth;
         void bodyEl.offsetWidth;
+
         finalCountdown.classList.add("animate-number");
         bodyEl.classList.add("animate-glow");
       }
@@ -197,18 +202,27 @@
       pauseTimer();
       timeRemaining = duration;
       updateDisplay();
+
+      // Ensure small timer + logo are visible again
       mainContent.style.display = "flex";
+
+      // Clear fullscreen countdown
       finalCountdown.textContent = "";
       finalCountdown.style.opacity = 0;
+      finalCountdown.style.animation = "none";
+
+      // Clear glow
       bodyEl.classList.remove("animate-glow");
     }
 
+    // Keyboard shortcuts
     document.addEventListener("keydown", (e) => {
       if (e.key === "s" || e.key === "S") startTimer();
       if (e.key === "p" || e.key === "P") pauseTimer();
       if (e.key === "r" || e.key === "R") resetTimer();
     });
 
+    // Initialize
     updateDisplay();
     if (autoStart) startTimer();
   </script>
