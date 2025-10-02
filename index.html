@@ -63,7 +63,7 @@
       align-items: center;
       background: #000;
       font-family: 'AntennaMedium', sans-serif;
-      font-size: 600px; /* slightly smaller */
+      font-size: 600px;
       color: transparent;
       background: linear-gradient(180deg, #028DAC 44%, #FFFFFF 100%);
       -webkit-background-clip: text;
@@ -98,12 +98,12 @@
   <script>
     let params = new URLSearchParams(window.location.search);
 
-    // Exact parsing
+    // Parse query parameters
     let hours   = params.has("hours")   ? parseInt(params.get("hours"))   || 0 : 0;
     let minutes = params.has("minutes") ? parseInt(params.get("minutes")) || 0 : 0;
     let seconds = params.has("seconds") ? parseInt(params.get("seconds")) || 0 : 0;
 
-    // Default to 10 minutes if nothing specified
+    // Default if nothing specified
     if (!params.has("hours") && !params.has("minutes") && !params.has("seconds")) {
       minutes = 10;
     }
@@ -136,11 +136,11 @@
         if (timeRemaining > 0) {
           timeRemaining--;
 
-          // If we've reached 10 or below → go straight into final countdown
-          if (timeRemaining <= 10) {
+          // If we've just reached 11 → switch straight into big countdown (starting at 10)
+          if (timeRemaining === 11) {
             clearInterval(timerInterval);
             timerInterval = null;
-            startFinalCountdown(timeRemaining);
+            startFinalCountdown(10);
           } else {
             updateDisplay();
           }
@@ -159,18 +159,18 @@
       updateDisplay();
     }
 
-    function startFinalCountdown(startNum) {
-      mainContent.style.display = "none"; // Hide logo/timer
+    function startFinalCountdown(count) {
+      mainContent.style.display = "none";
 
-      let count = startNum;
+      let current = count;
       let countdownInterval = setInterval(() => {
-        if (count > 0) {
-          finalCountdown.textContent = count;
+        if (current > 0) {
+          finalCountdown.textContent = current;
           finalCountdown.style.opacity = "1";
           finalCountdown.style.animation = "none";
-          void finalCountdown.offsetWidth; // reset animation
+          void finalCountdown.offsetWidth; // reflow restart
           finalCountdown.style.animation = "numberPulse 1s forwards";
-          count--;
+          current--;
         } else {
           clearInterval(countdownInterval);
           finalCountdown.textContent = "";
@@ -179,7 +179,7 @@
       }, 1000);
     }
 
-    // keyboard controls
+    // Keyboard controls
     document.addEventListener("keydown", (e) => {
       if (e.key === "s" || e.key === "S") startTimer();
       if (e.key === "p" || e.key === "P") pauseTimer();
