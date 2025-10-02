@@ -2,17 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Keynote Timer</title>
+  <title>Flexport Fall Release 25 Timer</title>
 
-  <!-- Antenna font preload -->
-  <link rel="preload" href="Fonts/Antenna-BlackItalic.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- Preload Font -->
+  <link rel="preload" href="Fonts/Antenna-Medium.woff2" as="font" type="font/woff2" crossorigin>
+
   <style>
     @font-face {
-      font-family: 'Antenna';
-      src: url('Fonts/Antenna-BlackItalic.woff2') format('woff2'),
-           url('Fonts/Antenna-BlackItalic.woff') format('woff');
-      font-weight: 900;
-      font-style: italic;
+      font-family: 'AntennaMedium';
+      src: url('Fonts/Antenna-Medium.woff2') format('woff2'),
+           url('Fonts/Antenna-Medium.woff') format('woff');
+      font-weight: 500;
+      font-style: normal;
       font-display: swap;
     }
 
@@ -23,19 +24,11 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(-45deg, #FAD9A6, #51C2B9, #FAD9A6, #51C2B9);
-      background-size: 400% 400%;
-      animation: gradientShift 12s ease infinite;
+      background: #000; /* Black background */
       overflow: hidden;
+      flex-direction: column;
     }
 
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Container centered within 3520×1056 */
     .timer-container {
       width: 3520px;
       height: 1056px;
@@ -46,45 +39,80 @@
       text-align: center;
     }
 
-    h1 {
-      font-family: 'Antenna-BlackItalic', sans-serif;
-      font-size: 120px; /* smaller */
-      text-transform: uppercase;
-      margin: 0 0 40px;
-      color: #052439;
+    /* Logo */
+    #logo {
+      max-width: 80%;
+      height: auto;
+      margin-bottom: 50px;
     }
 
+    /* Timer */
     #timer {
-      font-family: 'Antenna-BlackItalic', sans-serif;
-      font-size: 200px; /* smaller */
+      font-family: 'AntennaMedium', sans-serif;
+      font-size: 200px;
       letter-spacing: 8px;
-      color: #052439;
+      color: #fff;
+    }
+
+    /* Big countdown overlay */
+    #finalCountdown {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      font-family: 'AntennaMedium', sans-serif;
+      font-size: 800px;
+      color: #fff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1000;
+      animation: none;
+    }
+
+    @keyframes numberPulse {
+      0%   { transform: scale(0.8); opacity: 0; }
+      20%  { transform: scale(1);   opacity: 1; }
+      80%  { transform: scale(1.2); opacity: 0; }
+      100% { transform: scale(1.2); opacity: 0; }
+    }
+
+    @keyframes fadeToBlack {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <div class="timer-container">
-    <h1>KEYNOTE BEGINS IN</h1>
+  <div class="timer-container" id="mainContent">
+    <img id="logo" src="Images/Flexport_FallRelease25_Logo.png" alt="Flexport Fall Release 25 Logo">
     <div id="timer">00:10:00</div>
   </div>
 
+  <!-- Big final countdown element -->
+  <div id="finalCountdown"></div>
+
   <script>
     let params = new URLSearchParams(window.location.search);
-
-    // Default 10 minutes
     let durationMinutes = parseInt(params.get("minutes")) || 10;
     let autoStart = params.get("autostart") === "true";
 
-    let duration = durationMinutes * 60; 
+    let duration = durationMinutes * 60;
     let timeRemaining = duration;
     let timerInterval = null;
+
     const timerDisplay = document.getElementById('timer');
+    const mainContent = document.getElementById('mainContent');
+    const finalCountdown = document.getElementById('finalCountdown');
 
     function updateDisplay() {
       let minutes = Math.floor(timeRemaining / 60);
       let seconds = timeRemaining % 60;
       let hours = Math.floor(minutes / 60);
       minutes = minutes % 60;
+
       timerDisplay.textContent =
         String(hours).padStart(2, '0') + ":" +
         String(minutes).padStart(2, '0') + ":" +
@@ -97,9 +125,13 @@
         if (timeRemaining > 0) {
           timeRemaining--;
           updateDisplay();
-        } else {
-          clearInterval(timerInterval);
-          timerInterval = null;
+
+          // Trigger final countdown sequence at 5s
+          if (timeRemaining === 5) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            startFinalCountdown();
+          }
         }
       }, 1000);
     }
@@ -115,13 +147,35 @@
       updateDisplay();
     }
 
-    // Keyboard shortcuts (still available for you as secret controls)
+    // Final "5..1" countdown animation
+    function startFinalCountdown() {
+      // Hide main logo/timer
+      mainContent.style.display = "none";
+
+      let count = 5;
+      let countdownInterval = setInterval(() => {
+        if (count > 0) {
+          finalCountdown.textContent = count;
+          finalCountdown.style.opacity = "1";
+          finalCountdown.style.animation = "numberPulse 1s forwards";
+          count--;
+        } else {
+          clearInterval(countdownInterval);
+          finalCountdown.textContent = "";
+          finalCountdown.style.background = "#000";
+          finalCountdown.style.animation = "fadeToBlack 2s forwards";
+        }
+      }, 1000);
+    }
+
+    // Keyboard short-cuts for hidden control
     document.addEventListener("keydown", (e) => {
       if (e.key === "s" || e.key === "S") startTimer();
       if (e.key === "p" || e.key === "P") pauseTimer();
       if (e.key === "r" || e.key === "R") resetTimer();
     });
 
+    // Initialize
     updateDisplay();
     if (autoStart) startTimer();
   </script>
