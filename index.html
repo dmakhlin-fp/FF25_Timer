@@ -98,14 +98,12 @@
   <script>
     let params = new URLSearchParams(window.location.search);
 
-    // Parse query parameters
     let hours   = params.has("hours")   ? parseInt(params.get("hours"))   || 0 : 0;
     let minutes = params.has("minutes") ? parseInt(params.get("minutes")) || 0 : 0;
     let seconds = params.has("seconds") ? parseInt(params.get("seconds")) || 0 : 0;
 
-    // Default if nothing specified
     if (!params.has("hours") && !params.has("minutes") && !params.has("seconds")) {
-      minutes = 10;
+      minutes = 10; // Default to 10 minutes
     }
 
     let autoStart = params.get("autostart") === "true";
@@ -136,12 +134,13 @@
         if (timeRemaining > 0) {
           timeRemaining--;
 
-          // If we've just reached 11 → switch straight into big countdown (starting at 10)
-          if (timeRemaining === 11) {
+          // If we JUST hit 10 → stop small timer and switch to big countdown
+          if (timeRemaining === 10) {
             clearInterval(timerInterval);
             timerInterval = null;
             startFinalCountdown(10);
           } else {
+            // Show countdown normally until then
             updateDisplay();
           }
         }
@@ -159,16 +158,16 @@
       updateDisplay();
     }
 
-    function startFinalCountdown(count) {
+    function startFinalCountdown(startNum) {
       mainContent.style.display = "none";
 
-      let current = count;
+      let current = startNum;
       let countdownInterval = setInterval(() => {
         if (current > 0) {
           finalCountdown.textContent = current;
           finalCountdown.style.opacity = "1";
           finalCountdown.style.animation = "none";
-          void finalCountdown.offsetWidth; // reflow restart
+          void finalCountdown.offsetWidth; // trigger reflow
           finalCountdown.style.animation = "numberPulse 1s forwards";
           current--;
         } else {
