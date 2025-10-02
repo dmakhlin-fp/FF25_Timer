@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Flexport Fall Release 25 Timer</title>
 
-  <!-- Preload Font -->
   <link rel="preload" href="Fonts/Antenna-Medium.woff2" as="font" type="font/woff2" crossorigin>
 
   <style>
@@ -40,7 +39,7 @@
     }
 
     #logo {
-      width: 100%;     
+      width: 100%;
       max-width: 1200px;
       height: auto;
       margin-bottom: 40px;
@@ -82,8 +81,8 @@
     }
 
     @keyframes fadeToBlack {
-      0% { background-color: #000; opacity: 1; }
-      100% { background-color: #000; opacity: 0; }
+      0% { opacity: 1; }
+      100% { opacity: 0; }
     }
   </style>
 </head>
@@ -103,7 +102,7 @@
     let seconds = params.has("seconds") ? parseInt(params.get("seconds")) || 0 : 0;
 
     if (!params.has("hours") && !params.has("minutes") && !params.has("seconds")) {
-      minutes = 10; // Default to 10 minutes
+      minutes = 10; // default
     }
 
     let autoStart = params.get("autostart") === "true";
@@ -134,17 +133,38 @@
         if (timeRemaining > 0) {
           timeRemaining--;
 
-          // If we JUST hit 10 → stop small timer and switch to big countdown
-          if (timeRemaining === 10) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            startFinalCountdown(10);
-          } else {
-            // Show countdown normally until then
+          if (timeRemaining > 10) {
+            // Normal small timer
             updateDisplay();
+          } else {
+            // Switch at 10 and below
+            if (timeRemaining === 10) {
+              // Hide main content once
+              mainContent.style.display = "none";
+            }
+            showBigNumber(timeRemaining);
           }
+        } else {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          endSequence();
         }
       }, 1000);
+    }
+
+    function showBigNumber(n) {
+      if (n > 0) {
+        finalCountdown.textContent = n;
+        finalCountdown.style.opacity = "1";
+        finalCountdown.style.animation = "none";
+        void finalCountdown.offsetWidth; // trigger reflow
+        finalCountdown.style.animation = "numberPulse 1s forwards";
+      }
+    }
+
+    function endSequence() {
+      finalCountdown.textContent = "";
+      finalCountdown.style.animation = "fadeToBlack 2s forwards";
     }
 
     function pauseTimer() {
@@ -156,26 +176,9 @@
       pauseTimer();
       timeRemaining = duration;
       updateDisplay();
-    }
-
-    function startFinalCountdown(startNum) {
-      mainContent.style.display = "none";
-
-      let current = startNum;
-      let countdownInterval = setInterval(() => {
-        if (current > 0) {
-          finalCountdown.textContent = current;
-          finalCountdown.style.opacity = "1";
-          finalCountdown.style.animation = "none";
-          void finalCountdown.offsetWidth; // trigger reflow
-          finalCountdown.style.animation = "numberPulse 1s forwards";
-          current--;
-        } else {
-          clearInterval(countdownInterval);
-          finalCountdown.textContent = "";
-          finalCountdown.style.animation = "fadeToBlack 2s forwards";
-        }
-      }, 1000);
+      mainContent.style.display = "flex";
+      finalCountdown.textContent = "";
+      finalCountdown.style.opacity = 0;
     }
 
     // Keyboard controls
@@ -185,6 +188,7 @@
       if (e.key === "r" || e.key === "R") resetTimer();
     });
 
+    // Init
     updateDisplay();
     if (autoStart) startTimer();
   </script>
