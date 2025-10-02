@@ -39,11 +39,12 @@
       text-align: center;
     }
 
-    /* Logo */
+    /* Logo same width as timer */
     #logo {
-      max-width: 80%;
+      width: 100%;     
+      max-width: 1200px;  /* controls large size; matches timer visually */
       height: auto;
-      margin-bottom: 50px;
+      margin-bottom: 40px;
     }
 
     /* Timer */
@@ -52,6 +53,7 @@
       font-size: 200px;
       letter-spacing: 8px;
       color: #fff;
+      max-width: 1200px; /* aligns visually w/ logo */
     }
 
     /* Big countdown overlay */
@@ -65,7 +67,10 @@
       background: #000;
       font-family: 'AntennaMedium', sans-serif;
       font-size: 800px;
-      color: #fff;
+      color: transparent;
+      background: linear-gradient(180deg, #028DAC 44%, #FFFFFF 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
       opacity: 0;
       pointer-events: none;
       z-index: 1000;
@@ -80,14 +85,14 @@
     }
 
     @keyframes fadeToBlack {
-      0% { opacity: 1; }
-      100% { opacity: 0; }
+      0% { background-color: #000; opacity: 1; }
+      100% { background-color: #000; opacity: 0; }
     }
   </style>
 </head>
 <body>
   <div class="timer-container" id="mainContent">
-    <!-- Updated: SVG Logo -->
+    <!-- SVG Logo -->
     <img id="logo" src="Images/Flexport_FallRelease25_Logo.svg" alt="Flexport Fall Release 25 Logo">
     <div id="timer">00:10:00</div>
   </div>
@@ -127,8 +132,8 @@
           timeRemaining--;
           updateDisplay();
 
-          // Trigger final countdown sequence at 5s
-          if (timeRemaining === 5) {
+          // Start large number countdown sequence at 10s
+          if (timeRemaining === 10) {
             clearInterval(timerInterval);
             timerInterval = null;
             startFinalCountdown();
@@ -148,22 +153,23 @@
       updateDisplay();
     }
 
-    // Final "5..1" countdown animation
+    // Final "10..1" countdown animation
     function startFinalCountdown() {
       // Hide main logo/timer
       mainContent.style.display = "none";
 
-      let count = 5;
+      let count = 10;
       let countdownInterval = setInterval(() => {
         if (count > 0) {
           finalCountdown.textContent = count;
           finalCountdown.style.opacity = "1";
+          finalCountdown.style.animation = "none"; // reset animation
+          void finalCountdown.offsetWidth; // trigger reflow
           finalCountdown.style.animation = "numberPulse 1s forwards";
           count--;
         } else {
           clearInterval(countdownInterval);
           finalCountdown.textContent = "";
-          finalCountdown.style.background = "#000";
           finalCountdown.style.animation = "fadeToBlack 2s forwards";
         }
       }, 1000);
