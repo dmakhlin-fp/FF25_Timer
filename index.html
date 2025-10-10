@@ -1,230 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Flexport Fall Release 25 Timer</title>
+<meta charset="UTF-8">
+<title>Flexport Fall Release 25 Timer</title>
 
-  <!-- Preload Font -->
-  <link rel="preload" href="Fonts/Antenna-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="Fonts/Antenna-Medium.woff2" as="font" type="font/woff2" crossorigin>
 
-  <style>
-    @font-face {
-      font-family: 'AntennaMedium';
-      src: url('Fonts/Antenna-Medium.woff2') format('woff2'),
-           url('Fonts/Antenna-Medium.woff') format('woff');
-      font-weight: 500;
-      font-style: normal;
-      font-display: swap;
-    }
+<style>
+@font-face {
+  font-family: "AntennaMedium";
+  src: url("Fonts/Antenna-Medium.woff2") format("woff2"),
+       url("Fonts/Antenna-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
 
-    body {
-      margin: 0;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #000;
-      overflow: hidden;
-      flex-direction: column;
-      position: relative;
-    }
+/* --- Layout --- */
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  overflow: hidden;
+  flex-direction: column;
+  position: relative;
+}
 
-    .timer-container {
-      width: 3520px;
-      height: 1056px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      z-index: 2;
-      position: relative;
-    }
+.timer-container {
+  width: 3520px;
+  height: 1056px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 2;
+  position: relative;
+}
 
-    #logo {
-      width: 100%;
-      max-width: 1200px;
-      height: auto;
-      margin-bottom: 40px;
-    }
+#logo {
+  width: 100%;
+  max-width: 1200px;
+  height: auto;
+  margin-bottom: 40px;
+}
 
-    #timer {
-      font-family: 'AntennaMedium', sans-serif;
-      font-size: 200px;
-      letter-spacing: 8px;
-      color: #fff;
-      max-width: 1200px;
-    }
+#timer {
+  font-family: "AntennaMedium", sans-serif;
+  font-size: 200px;
+  letter-spacing: 8px;
+  color: #fff;
+  max-width: 1200px;
+}
 
-    #finalCountdown {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #000;
-      font-family: 'AntennaMedium', sans-serif;
-      font-size: 600px;
-      color: transparent;
-      background: linear-gradient(180deg, #028DAC 44%, #FFFFFF 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 5;
-    }
+#finalCountdown {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  font-family: "AntennaMedium", sans-serif;
+  font-size: 600px;
+  color: transparent;
+  background: linear-gradient(180deg, #028DAC 44%, #FFFFFF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+}
 
-    /* Number pulse (per second) */
-    @keyframes numberPulse {
-      0%   { transform: scale(0.8); opacity: 0; }
-      20%  { transform: scale(1);   opacity: 1; }
-      50%  { transform: scale(1.05); opacity: 1; }
-      100% { transform: scale(1.05); opacity: 0; }
-    }
+@media (max-width: 1800px) {
+  /* Smaller monitor (≈1728×960) */
+  .timer-container { width: 100%; height: 100%; }
+  #logo { max-width: 600px; margin-bottom: 20px; }
+  #timer { font-size: 120px; letter-spacing: 4px; }
+  #finalCountdown { font-size: 320px; }
+}
 
-    /* Glow pulse (in sync with numbers) */
-    @keyframes glowPulse {
-      0%   { box-shadow: inset 0 0 0px 0px rgba(2,141,172,0); }
-      20%  { box-shadow: inset 0 0 80px 5px rgba(2,141,172,0.9); }
-      50%  { box-shadow: inset 0 0 100px 5px rgba(2,141,172,1); }
-      100% { box-shadow: inset 0 0 0px 0px rgba(2,141,172,0); }
-    }
+/* --- Animations --- */
+@keyframes numberPulse {
+  0%   { transform: scale(0.8); opacity: 0; }
+  20%  { transform: scale(1);   opacity: 1; }
+  50%  { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1.05); opacity: 0; }
+}
 
-    .animate-number {
-      animation: numberPulse 1s linear forwards;
-    }
-    .animate-glow {
-      animation: glowPulse 1s linear forwards;
-    }
+@keyframes glowPulse {
+  0%   { box-shadow: inset 0 0 0px 0px rgba(2,141,172,0); }
+  20%  { box-shadow: inset 0 0 80px 5px rgba(2,141,172,0.9); }
+  50%  { box-shadow: inset 0 0 100px 5px rgba(2,141,172,1); }
+  100% { box-shadow: inset 0 0 0px 0px rgba(2,141,172,0); }
+}
 
-    @keyframes fadeToBlack {
-      0% { opacity: 1; }
-      100% { opacity: 0; }
-    }
-  </style>
+.animate-number { animation: numberPulse 1s linear forwards; }
+.animate-glow   { animation: glowPulse 1s linear forwards; }
+
+@keyframes fadeToBlack {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+</style>
 </head>
 <body>
   <div class="timer-container" id="mainContent">
-    <img id="logo" src="Images/Flexport_FallRelease25_Logo.svg" alt="Flexport Fall Release 25 Logo">
+    <img id="logo" src="Images/Flexport_FallRelease25_Logo.svg"
+         alt="Flexport Fall Release 25 Logo">
     <div id="timer">00:10:00</div>
   </div>
 
   <div id="finalCountdown"></div>
 
-  <script>
-    let params = new URLSearchParams(window.location.search);
+<script>
+const params = new URLSearchParams(window.location.search);
 
-    // Parse query string (supports ?hours=, ?minutes=, ?seconds=)
-    let hours   = params.has("hours")   ? parseInt(params.get("hours"))   || 0 : 0;
-    let minutes = params.has("minutes") ? parseInt(params.get("minutes")) || 0 : 0;
-    let seconds = params.has("seconds") ? parseInt(params.get("seconds")) || 0 : 0;
+let hours   = params.has("hours")   ? parseInt(params.get("hours"))   || 0 : 0;
+let minutes = params.has("minutes") ? parseInt(params.get("minutes")) || 0 : 0;
+let seconds = params.has("seconds") ? parseInt(params.get("seconds")) || 0 : 0;
 
-    // Default to 10 minutes if nothing specified
-    if (!params.has("hours") && !params.has("minutes") && !params.has("seconds")) {
-      minutes = 10;
-    }
+// --- absolute-time mode ---
+let endISO = params.get("end");  // like 2025-10-14T08:45:00-07:00
+let endTime = endISO ? new Date(endISO) : null;
 
-    let autoStart = params.get("autostart") === "true";
+if (!params.has("hours") && !params.has("minutes") && !params.has("seconds") && !endTime) {
+  minutes = 10; // default duration
+}
 
-    let duration = hours * 3600 + minutes * 60 + seconds;
-    let timeRemaining = duration;
-    let timerInterval = null;
+const autoStart = params.get("autostart") === "true";
 
-    const timerDisplay = document.getElementById('timer');
-    const mainContent  = document.getElementById('mainContent');
-    const finalCountdown = document.getElementById('finalCountdown');
-    const bodyEl = document.body;
+let duration, timeRemaining;
 
-    function updateDisplay() {
-      let mins = Math.floor(timeRemaining / 60);
-      let secs = timeRemaining % 60;
-      let hrs = Math.floor(mins / 60);
-      mins = mins % 60;
+function computeDuration() {
+  if (endTime) {
+    const now = new Date();
+    duration = Math.floor((endTime - now) / 1000);
+    if (duration < 0) duration = 0;
+  } else {
+    duration = hours * 3600 + minutes * 60 + seconds;
+  }
+  timeRemaining = duration;
+}
 
-      timerDisplay.textContent =
-        String(hrs).padStart(2, '0') + ":" +
-        String(mins).padStart(2, '0') + ":" +
-        String(secs).padStart(2, '0');
-    }
+computeDuration();
 
-    function startTimer() {
-      if (timerInterval) return;
-      timerInterval = setInterval(() => {
-        if (timeRemaining > 0) {
-          timeRemaining--;
+const timerDisplay   = document.getElementById("timer");
+const mainContent    = document.getElementById("mainContent");
+const finalCountdown = document.getElementById("finalCountdown");
+const bodyEl         = document.body;
 
-          if (timeRemaining > 10) {
-            updateDisplay();
-          } else {
-            if (timeRemaining === 10) {
-              mainContent.style.display = "none";
-            }
-            showBigNumber(timeRemaining);
-          }
-        } else {
-          clearInterval(timerInterval);
-          timerInterval = null;
-          endSequence();
+let timerInterval = null;
+
+function updateDisplay() {
+  let mins = Math.floor(timeRemaining / 60);
+  let secs = timeRemaining % 60;
+  let hrs  = Math.floor(mins / 60);
+  mins = mins % 60;
+
+  timerDisplay.textContent =
+    String(hrs).padStart(2, "0") + ":" +
+    String(mins).padStart(2, "0") + ":" +
+    String(secs).padStart(2, "0");
+}
+
+function startTimer() {
+  if (timerInterval) return;
+  timerInterval = setInterval(() => {
+    computeDuration();
+    if (timeRemaining > 0) {
+      timeRemaining--;
+
+      if (timeRemaining > 10) {
+        updateDisplay();
+      } else {
+        if (timeRemaining === 10) {
+          mainContent.style.display = "none";
         }
-      }, 1000);
-    }
-
-    function showBigNumber(n) {
-      if (n > 0) {
-        finalCountdown.textContent = n;
-        finalCountdown.style.opacity = "1";
-
-        // Sync both animations per tick
-        finalCountdown.classList.remove("animate-number");
-        bodyEl.classList.remove("animate-glow");
-        void finalCountdown.offsetWidth;
-        void bodyEl.offsetWidth;
-
-        finalCountdown.classList.add("animate-number");
-        bodyEl.classList.add("animate-glow");
+        showBigNumber(timeRemaining);
       }
-    }
-
-    function endSequence() {
-      finalCountdown.textContent = "";
-      finalCountdown.style.animation = "fadeToBlack 2s forwards";
-      bodyEl.classList.remove("animate-glow");
-    }
-
-    function pauseTimer() {
+    } else {
       clearInterval(timerInterval);
       timerInterval = null;
+      endSequence();
     }
+  }, 1000);
+}
 
-    function resetTimer() {
-      pauseTimer();
-      timeRemaining = duration;
-      updateDisplay();
+function showBigNumber(n) {
+  if (n > 0) {
+    finalCountdown.textContent = n;
+    finalCountdown.style.opacity = "1";
 
-      // Ensure small timer + logo are visible again
-      mainContent.style.display = "flex";
+    finalCountdown.classList.remove("animate-number");
+    bodyEl.classList.remove("animate-glow");
+    void finalCountdown.offsetWidth; 
+    void bodyEl.offsetWidth;
+    finalCountdown.classList.add("animate-number");
+    bodyEl.classList.add("animate-glow");
+  }
+}
 
-      // Clear fullscreen countdown
-      finalCountdown.textContent = "";
-      finalCountdown.style.opacity = 0;
-      finalCountdown.style.animation = "none";
+function endSequence() {
+  finalCountdown.textContent = "";
+  finalCountdown.style.animation = "fadeToBlack 2s forwards";
+  bodyEl.classList.remove("animate-glow");
+}
 
-      // Clear glow
-      bodyEl.classList.remove("animate-glow");
-    }
+function pauseTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+}
 
-    // Keyboard shortcuts
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "s" || e.key === "S") startTimer();
-      if (e.key === "p" || e.key === "P") pauseTimer();
-      if (e.key === "r" || e.key === "R") resetTimer();
-    });
+function resetTimer() {
+  pauseTimer();
+  computeDuration();
+  updateDisplay();
 
-    // Initialize
-    updateDisplay();
-    if (autoStart) startTimer();
-  </script>
+  mainContent.style.display = "flex";
+  finalCountdown.textContent = "";
+  finalCountdown.style.opacity = 0;
+  finalCountdown.style.animation = "none";
+  bodyEl.classList.remove("animate-glow");
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "s" || e.key === "S") startTimer();
+  if (e.key === "p" || e.key === "P") pauseTimer();
+  if (e.key === "r" || e.key === "R") resetTimer();
+});
+
+updateDisplay();
+if (autoStart) startTimer();
+</script>
 </body>
 </html>
