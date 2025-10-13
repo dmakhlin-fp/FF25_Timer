@@ -50,11 +50,18 @@ body {
 }
 
 #timer {
-  font-family: "AntennaMedium", sans-serif;
+  font-family: 'AntennaMedium', sans-serif;
   font-size: 200px;
   letter-spacing: 8px;
   color: #fff;
   max-width: 1200px;
+  text-align: center;
+
+  /* stop the visual jiggle on each digit change */
+  font-variant-numeric: tabular-nums;     /* each digit same width */
+  -moz-font-feature-settings: 'tnum';
+  -webkit-font-feature-settings: 'tnum';
+  font-feature-settings: 'tnum';
 }
 
 #finalCountdown {
