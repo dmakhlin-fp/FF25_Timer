@@ -42,21 +42,25 @@ body {
   z-index: 2;
   position: relative;
   box-sizing: border-box;
+  padding-bottom: 5vh; /* Shifts focal point slightly up */
 }
 
 #logo {
-  width: 45%; /* Sized for 16:9 balance */
-  max-width: 900px;
+  width: 15%; /* Much smaller logo */
+  max-width: 400px;
   height: auto;
-  margin-bottom: 5vh; /* Responsive spacing */
+  margin-bottom: 2vh; /* Tighter spacing to timer */
+  opacity: 0.9;
 }
 
 #timer {
   font-family: 'AntennaMedium', sans-serif;
-  font-size: clamp(40px, 12vw, 220px); 
-  letter-spacing: 0.04em;
+  /* Massive focal point size */
+  font-size: clamp(80px, 20vw, 380px); 
+  letter-spacing: -0.02em; /* Tighter letter spacing for impact */
   color: #fff;
   text-align: center;
+  line-height: 1;
 
   /* Prevent character jumping */
   font-variant-numeric: tabular-nums;
@@ -74,7 +78,7 @@ body {
   align-items: center;
   background: #000;
   font-family: "AntennaMedium", sans-serif;
-  font-size: clamp(100px, 45vw, 750px);
+  font-size: clamp(100px, 45vw, 850px);
   color: transparent;
   background: linear-gradient(180deg, #028DAC 44%, #FFFFFF 100%);
   -webkit-background-clip: text;
