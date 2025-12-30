@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Flexport Fall Release 25 Timer - 16:9 (No Logo)</title>
+<title>Flexport Velocity Timer - 16:9</title>
 
 <link rel="preload" href="Fonts/Antenna-Medium.woff2" as="font" type="font/woff2" crossorigin>
 
@@ -35,6 +35,7 @@ body {
   width: 100%;
   max-height: 100vh; 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -43,11 +44,17 @@ body {
   box-sizing: border-box;
 }
 
+#logo {
+  width: 45%; /* Sized for 16:9 balance */
+  max-width: 900px;
+  height: auto;
+  margin-bottom: 5vh; /* Responsive spacing */
+}
+
 #timer {
   font-family: 'AntennaMedium', sans-serif;
-  /* Larger font size now that logo is gone */
-  font-size: clamp(60px, 18vw, 320px); 
-  letter-spacing: 0.02em;
+  font-size: clamp(40px, 12vw, 220px); 
+  letter-spacing: 0.04em;
   color: #fff;
   text-align: center;
 
@@ -67,7 +74,7 @@ body {
   align-items: center;
   background: #000;
   font-family: "AntennaMedium", sans-serif;
-  font-size: clamp(100px, 45vw, 800px);
+  font-size: clamp(100px, 45vw, 750px);
   color: transparent;
   background: linear-gradient(180deg, #028DAC 44%, #FFFFFF 100%);
   -webkit-background-clip: text;
@@ -103,6 +110,8 @@ body {
 </head>
 <body>
   <div class="timer-container" id="mainContent">
+    <img id="logo" src="Images/Flexport_Velocity_Logo.png" 
+         alt="Flexport Velocity Logo">
     <div id="timer">00:00:00</div>
   </div>
 
