@@ -4,14 +4,13 @@
 <meta charset="UTF-8">
 <title>Flexport Velocity Timer - 16:9</title>
 
-<link rel="preload" href="Fonts/Antenna-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="Fonts/ZalandoSans-ExtraLight.ttf" as="font" type="font/ttf" crossorigin>
 
 <style>
 @font-face {
-  font-family: "AntennaMedium";
-  src: url("Fonts/Antenna-Medium.woff2") format("woff2"),
-       url("Fonts/Antenna-Medium.woff") format("woff");
-  font-weight: 500;
+  font-family: "ZalandoSans";
+  src: url("Fonts/ZalandoSans-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
   font-style: normal;
   font-display: swap;
 }
@@ -24,19 +23,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Updated Background to your Gradient */
-  background: linear-gradient(150deg,#09101f,#144ccd,#2365ff);
-  background-size: 180% 180%;
-  animation: gradient-animation 18s ease infinite;
+  background: #000;
   overflow: hidden;
   position: relative;
-}
-
-/* Gradient Keyframes */
-@keyframes gradient-animation {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 .timer-container {
@@ -51,21 +40,13 @@ body {
   z-index: 2;
   position: relative;
   box-sizing: border-box;
-  padding-bottom: 5vh; 
-}
-
-#logo {
-  width: 15%; 
-  max-width: 400px;
-  height: auto;
-  margin-bottom: 2vh; 
-  opacity: 0.9;
 }
 
 #timer {
-  font-family: 'AntennaMedium', sans-serif;
-  font-size: clamp(80px, 20vw, 380px); 
-  letter-spacing: -0.02em; 
+  font-family: 'ZalandoSans', sans-serif;
+  font-weight: 200;
+  font-size: clamp(80px, 20vw, 380px);
+  letter-spacing: -0.04em;
   color: #fff;
   text-align: center;
   line-height: 1;
@@ -83,8 +64,10 @@ body {
   justify-content: center;
   align-items: center;
   /* Dark background to make the big numbers pop */
-  background: #000; 
-  font-family: "AntennaMedium", sans-serif;
+  background: #000;
+  font-family: "ZalandoSans", sans-serif;
+  font-weight: 200;
+  letter-spacing: -0.04em;
   font-size: clamp(100px, 45vw, 850px);
   color: transparent;
   background: linear-gradient(180deg, #028DAC 44%, #FFFFFF 100%);
@@ -121,7 +104,6 @@ body {
 </head>
 <body>
   <div class="timer-container" id="mainContent">
-    <img id="logo" src="Images/Flexport_Velocity_Logo.png" alt="Flexport Velocity Logo">
     <div id="timer">00:00:00</div>
   </div>
 
@@ -200,9 +182,6 @@ function startTimer() {
 }
 
 function showBigNumber(n) {
-    // When the countdown starts, we stop the body animation for visual clarity
-    bodyEl.style.animation = "none"; 
-    
     finalCountdown.textContent = n;
     finalCountdown.style.opacity = "1";
 
@@ -230,8 +209,6 @@ function resetTimer() {
   computeDuration();
   updateDisplay();
 
-  // Restore the gradient animation on reset
-  bodyEl.style.animation = "gradient-animation 18s ease infinite";
   mainContent.style.display = "flex";
   finalCountdown.textContent = "";
   finalCountdown.style.opacity = 0;
